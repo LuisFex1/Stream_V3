@@ -1,6 +1,7 @@
 {
    "type": "module",
    "dependencies": {
-      "wa-sock": "github:xv-zv/wa-sock"
+      "wa-sock": "github:xv-zv/wa-sock",
+      "tesseract.js": "^7.0.0"
    }
 }

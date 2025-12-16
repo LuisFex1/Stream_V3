@@ -30,4 +30,4 @@ import { loadPlugins } from './Utils/plugins.js';
          plugin.call(bot, m, msg)
       })
    })
-})
+})()

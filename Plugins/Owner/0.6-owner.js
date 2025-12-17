@@ -27,6 +27,6 @@ export default {
       
       m.reply(mess[m.cmd])
       db.ignore = ids
-      fs.write('./Data/Json/db.json', JSON.stringify(db, null, 4))
+      fs.writeFile('./Data/Json/db.json', JSON.stringify(db, null, 4))
    }
 }

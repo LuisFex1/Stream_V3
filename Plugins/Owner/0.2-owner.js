@@ -5,7 +5,7 @@ export default {
    cmd: 'spamfex',
    async func(m) {
       
-      const spamfex = JSON.parse(await fs.read('./Data/Json/spamfex.json'))
+      const spamfex = JSON.parse(await fs.readFile('./Data/Json/spamfex.json'))
       if (Object.keys(spamfex) == 0) return m.reply('⚠️  Json sin elementos')
       
       for (const id in spamfex) {

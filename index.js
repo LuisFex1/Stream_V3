@@ -10,7 +10,7 @@ import fs from 'node:fs/promises';
    const __filename = join(__dirname, 'Plugins')
    const plugins = await loadPlugins(fileURLToPath(__filename))
    
-   global.db = JSON.parse(await fs.read('./Data/Json/db.json'))
+   global.db = JSON.parse(await fs.readFile('./Data/Json/db.json'))
    
    const bot = new Socket({
       phone: '',

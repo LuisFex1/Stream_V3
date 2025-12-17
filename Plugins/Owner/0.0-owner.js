@@ -1,6 +1,8 @@
 export default {
    cmd: 'gpsall',
    async func(m, msg) {
+      
+      m.react('⌛')
       const groups = await this.fetchGroupsAll()
       const text = ''
       for (const group of groups) {

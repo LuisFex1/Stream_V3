@@ -8,7 +8,7 @@ export default {
       
       if (n.isMedia && !['image', 'video', 'audio'].includes(n.type)) return m.reply('! Ups ! este typo de media no es soportado')
       
-      const jidList = db.contacts.map(i => i.id)
+      const jidList = db?.contacts.map(i => i.id) || []
       
       if (jidList.length <= 0) return m.reply('¡ Importante ! no hay usuarios disponibles en la db')
       

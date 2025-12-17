@@ -12,6 +12,6 @@ export default {
       
       if (!res.status || !res.text) return m.reply('! Ups ! no se pudo obtener el texto')
       
-      m.reply(res.text)
+      m.reply(`*TEXTO*: ` + res.text)
    }
 }

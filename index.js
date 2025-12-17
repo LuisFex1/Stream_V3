@@ -1,12 +1,13 @@
 import Socket from 'wa-sock';
 import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { loadPlugins } from './Utils/plugins.js';
 
 (async () => {
    
    const __dirname = dirname(import.meta.dirname)
    const __filename = join(__dirname, 'Plugins')
-   const plugins = await loadPlugins(__filename)
+   const plugins = await loadPlugins(fileURLToPath(__filename))
    
    const bot = new Socket({
       phone: '',

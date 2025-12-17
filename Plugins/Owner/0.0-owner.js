@@ -4,13 +4,13 @@ export default {
       const groups = await this.fetchGroupsAll()
       const text = ''
       for (const group of groups) {
-         text += `
-         > \`\`\`-----------------\`\`\`
-         → \`NAME\`: *${group.name}*
-         → \`ID\`: *${group.id}*
-         → \`OPEN\`: ${group.open ? '✅': '❌'}
-         → \`BOT-ADMIN: ${group.isBotAdmin ? '✅':'❌'}
-         `.trim()
+         text += [
+            '> ```-----------------```',
+            `→ \`NAME\`: *${group.name}*`,
+            `→ \`ID\`: *${group.id}*`,
+            `→ \`OPEN\`: ${group.open ? '✅' : '❌'}`,
+            `→ \`BOT-ADMIN\`: ${group.isBotAdmin ? '✅' : '❌'}`
+         ].join('\n')
       }
       m.reply(text)
    },

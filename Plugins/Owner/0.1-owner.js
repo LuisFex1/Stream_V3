@@ -2,7 +2,7 @@ export default {
    cmd: 'notify',
    async func(m) {
       
-      const n = m.isQuote ? n.quote : m
+      const n = m.isQuote ? m.quote : m
       
       if (!m.isQuote && !m.isMedia && !m.text) {
          return m.react('❌')
@@ -20,7 +20,7 @@ export default {
       
       await this.sendMessage(m.from, content, {
          ephemeral: data.ephemeral,
-         mentions: group.participants.map(i => i.id)
+         mentions: group.users.map(i => i.id)
       })
    },
    isOwner: true,

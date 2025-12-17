@@ -8,8 +8,8 @@ function loadPlugins(folder) {
       const files = await fs.readdir(folder, { withFileTypes: true })
       for (const file of files) {
          const path = join(folder, file.name)
-         if (file.isFile()) readPlugins(path)
-         if (file.isDirectory()) loadPlugins(path)
+         if (file.isFile()) await readPlugins(path)
+         if (file.isDirectory()) await loadPlugins(path)
       }
       return plugins
    }).catch(() => plugins)
@@ -17,20 +17,17 @@ function loadPlugins(folder) {
 
 async function readPlugins(path) {
    
-   const file = await import(path)
+   const file = (await import(path)).default
    
-   if (file) {
+   if (file && Boolean(file.cmd) && typeof file.func === 'function') {
       
-      const isCmd = Boolean(file.cmd) && Boolean(file.func)
-      
-      if (isCmd) {
-         
-         plugins[file.cmd] = Object.assign(file.func, {
+      file.cmd.split(/\/|\|/g).forEach(cmd => {
+         plugins[cmd] = Object.assign(file.func, {
             active: true,
             ...Object.fromEntries(Object.entries(file).filter(([k, v]) => typeof v !== 'function')),
             path
          })
-      }
+      })
    }
 }
 

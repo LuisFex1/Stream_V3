@@ -1,4 +1,4 @@
-export { OPC_CONFIG } from 'wa-sock';
+import { OPC_CONFIG } from 'wa-sock';
 import fs from 'node:fs/promises';
 
 export default {
@@ -26,6 +26,7 @@ export default {
       if (m.cmd === 'unmute') ids = ids.filter(i => i != mention)
       
       m.reply(mess[m.cmd])
-      fs.write('./Data/Json/mute.json', JSON.stringify(ids, null, 4))
+      db.ignore = ids
+      fs.write('./Data/Json/db.json', JSON.stringify(db, null, 4))
    }
 }

@@ -2,6 +2,7 @@ import Socket from 'wa-sock';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { loadPlugins } from './Utils/plugins.js';
+import fs from 'node:fs/promises';
 
 (async () => {
    
@@ -9,9 +10,14 @@ import { loadPlugins } from './Utils/plugins.js';
    const __filename = join(__dirname, 'Plugins')
    const plugins = await loadPlugins(fileURLToPath(__filename))
    
+   global.db = JSON.parse(await fs.read('./Data/Json/db.json'))
+   
    const bot = new Socket({
       phone: '',
-      owner: ['54787139743924@lid']
+      owner: ['54787139743924@lid'],
+      ignore: {
+         ids: db.ignore
+      }
    })
    
    bot.on('code', code => {

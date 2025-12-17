@@ -5,7 +5,7 @@ export default {
    cmd: 'mute|unmute',
    async func(m) {
       
-      const { ids } = OPC_CONFIG.ignore
+      let { ids } = OPC_CONFIG.ignore
       
       const mention = m.mentions || m.quote?.id || (!m.isGroup ? m.id : null)
       

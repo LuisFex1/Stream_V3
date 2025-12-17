@@ -5,7 +5,7 @@ import { loadPlugins } from './Utils/plugins.js';
 
 (async () => {
    
-   const __dirname = dirname(import.meta.dirname)
+   const __dirname = dirname(import.meta.url)
    const __filename = join(__dirname, 'Plugins')
    const plugins = await loadPlugins(fileURLToPath(__filename))
    

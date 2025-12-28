@@ -1,6 +1,6 @@
 export default {
    cmd: 'poll',
-   async func(m, msg) {
+   async func(m, { msg }) {
       
       if (!m.text) return m.react('❌')
       
@@ -9,7 +9,7 @@ export default {
       
       if (!opc[0] || !opc[1] || !opc[2]) return m.reply('¡ importante ! , proporcionar el nombre de la encuesta y al menos 2 opciones')
       
-      if (opc.length >= 13) return m.reply('! Limite de opciones superada , incluir solo 13 opciones como máximo')
+      if (opc.length >= 14) return m.reply('! Limite de opciones superada , incluir solo 13 opciones como máximo')
       
       for (let i = 1; i < opc.length; i++) {
          for (let x = i + 1; x < opc.length; x++) {

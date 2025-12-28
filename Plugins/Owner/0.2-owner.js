@@ -15,11 +15,14 @@ export default {
          
          this.sendMessage(id, {
             ...(type ? {
-               [type]: data[type]
-            } : {}),
-            ...(type ? { caption: data.desc } : { text: data.text || data.desc })
+               [type]: data[type],
+               caption: data.desc
+            } : { text: data.text || data.desc })
          })
          await delay(5000)
       }
-   }
+      
+      m.reply('✅')
+   },
+   isOwner: true
 }

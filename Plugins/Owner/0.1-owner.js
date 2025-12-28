@@ -19,7 +19,7 @@ export default {
       } : { text: n.text || m.text }
       
       await this.sendMessage(m.from, content, {
-         ephemeral: data.ephemeral,
+         ephemeral: group.ephemeral,
          mentions: group.users.map(i => i.id)
       })
    },

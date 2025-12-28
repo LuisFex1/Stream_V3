@@ -3,7 +3,6 @@ import { OPC_CONFIG } from 'wa-sock';
 export default {
    cmd: 'me',
    func(m) {
-      
       const text = [
          `*\`NAME\`*: *${m.name}*`,
          `*\`ID\`*: *${m.id}*`,

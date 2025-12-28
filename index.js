@@ -1,7 +1,7 @@
 import Socket from 'wa-sock';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { loadPlugins } from './Utils/plugins.js';
+import { loadPlugins, DB } from './Utils/index.js';
 import fs from 'node:fs/promises';
 
 (async () => {
@@ -10,13 +10,14 @@ import fs from 'node:fs/promises';
    const __filename = join(__dirname, 'Plugins')
    const plugins = await loadPlugins(fileURLToPath(__filename))
    
-   global.db = JSON.parse(await fs.readFile('./Data/Json/db.json'))
+   const db = new DB('./Data/Json/db.json')
+   await db.init()
    
    const bot = new Socket({
       phone: '',
       owner: ['54787139743924@lid'],
       ignore: {
-         ids: db.ignore
+         has: id => db.isIgnore(id)
       }
    })
    
@@ -28,15 +29,27 @@ import fs from 'node:fs/promises';
       if (reazon === 'delete') process.exit()
    });
    
+   bot.on('contacts', contacts => {
+      for (const { id, lid, name } of contacts) {
+         if (db.isContact(id)) continue
+         db.addContact({
+            id: lid || id,
+            pn: id,
+            lid,
+            name
+         })
+      }
+   })
+   
    Object.keys(plugins).forEach(name => {
       bot.cmd(name, (m, msg) => {
          const plugin = plugins[name]
          if (plugin.isOwner && !m.isOwner) return
          if (plugin.isGroup && !m.isGroup) return
          if (plugin.isAdmin && !m.isAdmin) return
-         plugin.call(bot, m, msg)
+         plugin.call(bot, m, { msg, db })
       })
    })
    
-   bot.start()
+   bot.start().catch((e) => console.log('Error: ' + e.messsge))
 })()

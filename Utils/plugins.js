@@ -21,12 +21,14 @@ async function readPlugins(path) {
    
    if (file && Boolean(file.cmd) && typeof file.func === 'function') {
       
+      const content = {
+         active: true,
+         ...Object.fromEntries(Object.entries(file).filter(([k, v]) => typeof v !== 'function')),
+         path
+      }
+      
       file.cmd.split(/\/|\|/g).forEach(cmd => {
-         plugins[cmd] = Object.assign(file.func, {
-            active: true,
-            ...Object.fromEntries(Object.entries(file).filter(([k, v]) => typeof v !== 'function')),
-            path
-         })
+         plugins[cmd] = Object.assign(file.func, content)
       })
    }
 }

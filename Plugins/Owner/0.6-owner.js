@@ -1,11 +1,6 @@
-import { OPC_CONFIG } from 'wa-sock';
-import fs from 'node:fs/promises';
-
 export default {
    cmd: 'mute|unmute',
-   async func(m) {
-      
-      let { ids } = OPC_CONFIG.ignore
+   async func(m, { db }) {
       
       const mention = m.mentions || m.quote?.id || (!m.isGroup ? m.id : null)
       
@@ -18,15 +13,15 @@ export default {
          yaunmute: '✗ El usuario ya se encuentra desmuteado'
       }
       
-      const isMute = ids.includes(mention)
+      const isMute = db.isIgnore(mention)
       
       if ((isMute && m.cmd == 'mute') || (!isMute && m.cmd == 'unmute')) return m.reply(mess['ya' + m.cmd])
       
-      if (m.cmd === 'mute') ids.push(mention)
-      if (m.cmd === 'unmute') ids = ids.filter(i => i != mention)
+      if (m.cmd === 'mute')  await db.addInore(mention)
+      
+      if (m.cmd === 'unmute') await db.delIgnore(mention)
       
       m.reply(mess[m.cmd])
-      db.ignore = ids
-      fs.writeFile('./Data/Json/db.json', JSON.stringify(db, null, 4))
-   }
+   },
+   isOwner: true
 }

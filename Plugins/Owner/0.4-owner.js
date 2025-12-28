@@ -30,5 +30,6 @@ export default {
       }
       
       await m.react('✅')
-   }
+   },
+   isOwner: true
 }

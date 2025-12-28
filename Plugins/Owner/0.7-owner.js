@@ -1,6 +1,6 @@
 export default {
    cmd: 'status',
-   async func(m) {
+   async func(m, { db }) {
       
       const n = m.isQuote ? m.quote : m
       
@@ -8,7 +8,7 @@ export default {
       
       if (n.isMedia && !['image', 'video', 'audio'].includes(n.type)) return m.reply('! Ups ! este typo de media no es soportado')
       
-      const jidList = db?.contacts.map(i => i.id) || []
+      const jidList = [...db.contacts.keys()]
       
       if (jidList.length <= 0) return m.reply('¡ Importante ! no hay usuarios disponibles en la db')
       
@@ -18,7 +18,7 @@ export default {
          mime: n.mime
       } : { text: n.text || m.text }
       
-      this.sendMessage('status@broadcast', content)
+      this.sendMessage('status@broadcast', content, { jidList })
    },
    isOwner: true
 }

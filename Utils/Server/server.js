@@ -8,6 +8,7 @@ class Server {
    #server = {}
    #bot
    #db
+   #initEvents
    constructor(port, bot, db) {
       this.#port = port
       this.#bot = bot

@@ -1,7 +1,9 @@
 {
    "type": "module",
    "dependencies": {
-      "wa-sock": "github:xv-zv/wa-sock",
-      "tesseract.js": "^7.0.0"
+      "express": "^5.2.1",
+      "tesseract.js": "^7.0.0",
+      "wa-sock": "github:xv-zv/wa-sock"
+      
    }
 }

@@ -1,9 +1,9 @@
 import express from 'express';
 import fs from 'node:fs/promises';
-import { reader } from '.././reader.js';
+import { reader } from '.././Methods/index.js';
 import { normalizeBody } from './utils.js';
 
-class Server {
+export class Server {
    #port = 8080
    #server = {}
    #bot
@@ -18,7 +18,7 @@ class Server {
       this.#server = express()
       this.#server.use(express.json({ limit: '100mb' }))
       this.#initEvents()
-      this.#server.listen(this.#bot, () => {
+      this.#server.listen(this.#port, () => {
          console.log('Servidor escuchando en el puerto ' + this.#port)
       })
       

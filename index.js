@@ -1,8 +1,8 @@
 import Socket from 'wa-sock';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { loadPlugins, DB, Server } from './Utils/index.js';
 import fs from 'node:fs/promises';
+import { loadPlugins, DB, Server } from './Utils/index.js';
 
 (async () => {
    

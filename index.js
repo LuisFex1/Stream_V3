@@ -54,5 +54,5 @@ import fs from 'node:fs/promises';
    bot.start().then(() => {
       const server = new Server(8080, bot, db)
       server.start()
-   }).catch((e) => console.log('Error: ' + e.messsge))
+   }).catch((e) => console.log('Error: ' + e.message))
 })()

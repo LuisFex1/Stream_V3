@@ -7,7 +7,7 @@ export function normalizeBody(body = {}) {
          case 'image':
          case 'video':
          case 'audio':
-            m[body.type] = body.path ? { url: body.path } : Buffer.from(body.base64)
+            m[body.type] = !Buffer.isBuffer(body.path) && typeof body.path !== 'string' ? Buffer.from(body.path, 'base64') : body.path
             m.caption = body.message
             break;
          case 'text':

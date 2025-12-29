@@ -1,14 +1,16 @@
 import express from 'express';
 import fs from 'node:fs/promises';
-import { reader } from './reader.js';
+import { reader } from '.././reader.js';
+import { normalizeBody } from './utils.js';
 
 class Server {
    #port = 8080
    #server = {}
    #bot
-   constructor(port, bot) {
+   constructor(port, bot, db) {
       this.#port = port
       this.#bot = bot
+      this.#db = db
    }
    
    start = () => {
@@ -21,13 +23,13 @@ class Server {
       this.#server.listen(this.#bot, () => {
          console.log('Servidor escuchando en el puerto ' + this.#port)
       })
+      
    }
    
-   #listEvents = () => [
-   {
-      event: '/send',
-      func: ({ body: { id, ...content } }, res) => {
+   #initEvent = () => {
+      this.#server.post('/send', ({ body }, res) => {
          try {
+            const { id, ...content } = normalizeBody(body)
             const isId = typeof id == 'string'
             const isBc = 'status' in content
             
@@ -72,12 +74,26 @@ class Server {
                   }
                }
                
+               if ('action' in content) {
+                  if (content.action === 'mute') this.#db.addIgnore(id)
+                  if (content.action == 'unmute') this.#db.delIgnore(id)
+                  if(content.action == 'notify'){
+                     if(!id.endsWith('us')) return
+                     n.mentions = (await this.#bot.groupData(id)).users.map(i => i.id)
+                  }
+               }
+               
                if (isBc) {
                   id = 'status@broadcast'
                   n.jidList = content.status.list || db.contacts.map(i => i.id)
                }
                
-               this.#bot.sendMessage(id, m, n)
+               this.#bot.sendMessage(id, m, n).then(() => {
+                  if ('contact' in content) {
+                     this.#bot.sendContact(id, content.contact)
+                  }
+               })
+               
             }
             
             return res.json({
@@ -90,6 +106,14 @@ class Server {
                message: 'Error inesperado: ' + e.message
             })
          }
+      })
+   }
+   
+   #listEvents = () => [
+   {
+      event: '/send',
+      func: ({ body }, res) => {
+         
       },
       validate({ body: { ...content } }, res, next) {
          const send = message => res.json({
@@ -125,23 +149,23 @@ class Server {
    },
    {
       event: '/ocr',
-      func: async ({ body: { ...content }}, res) => {
+      func: async ({ body: { ...content } }, res) => {
          const isBase64 = content.data.length > 5000
-         const res = await reader(isBase64 ? Buffer.from(content.data,'base64') : content.data)
+         const res = await reader(isBase64 ? Buffer.from(content.data, 'base64') : content.data)
          
-         if(!res.status){
+         if (!res.status) {
             return res.json({
                status: '500',
                message: res.text
             })
-         } 
+         }
          res.json({
             status: '200',
             message: res.text
          })
       },
-      validate({ body: { ...content }}, res, next){
-         if(true){}
+      validate({ body: { ...content } }, res, next) {
+         if (true) {}
       }
    }]
 }

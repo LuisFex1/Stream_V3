@@ -1,4 +1,2 @@
-export * from './funcs.js';
-export * from './plugins.js';
-export * from './reader.js';
-export * from './database.js'
+export * from './Methods/index.js';
+export * from './Server/server.js';

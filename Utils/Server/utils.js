@@ -1,6 +1,6 @@
 export function normalizeBody(body = {}) {
    let m = {
-      id: body.number || body.id || body.phone 
+      id: body.number || body.id || body.phone
    }
    if (body.type) {
       switch (body.type) {
@@ -28,6 +28,10 @@ export function normalizeBody(body = {}) {
    }
    
    for (const i of ['viewOnce', 'voiceNote', 'broadcast', 'action']) {
+      if (i === 'broadcast') {
+         m.status = { list: body.users }
+         continue
+      }
       if (i in body) m[i] = body[i]
    }
    

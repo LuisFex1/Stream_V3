@@ -1,7 +1,7 @@
 import Socket from 'wa-sock';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { loadPlugins, DB } from './Utils/index.js';
+import { loadPlugins, DB, Server } from './Utils/index.js';
 import fs from 'node:fs/promises';
 
 (async () => {
@@ -51,5 +51,8 @@ import fs from 'node:fs/promises';
       })
    })
    
-   bot.start().catch((e) => console.log('Error: ' + e.messsge))
+   bot.start().then(() => {
+      const server = new Server(8080, bot, db)
+      server.start()
+   }).catch((e) => console.log('Error: ' + e.messsge))
 })()

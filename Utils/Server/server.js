@@ -7,6 +7,7 @@ class Server {
    #port = 8080
    #server = {}
    #bot
+   #db
    constructor(port, bot, db) {
       this.#port = port
       this.#bot = bot

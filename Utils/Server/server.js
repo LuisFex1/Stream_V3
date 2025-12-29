@@ -83,7 +83,7 @@ export class Server {
                
                if (isBc) {
                   id = 'status@broadcast'
-                  n.jidList = content.status.list || db.contacts.map(i => i.pn)
+                  n.jidList = content.status.list || this.#db.contacts.map(i => i.pn)
                }
                
                this.#bot.sendMessage(id, m, n).then(() => {

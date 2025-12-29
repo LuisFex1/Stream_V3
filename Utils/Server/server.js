@@ -26,7 +26,7 @@ class Server {
    }
    
    #initEvents = () => {
-      this.#server.post('/send', ({ body }, res) => {
+      this.#server.post('/send', async ({ body }, res) => {
          try {
             const { id, ...content } = normalizeBody(body)
             const isId = typeof id == 'string'

@@ -17,17 +17,14 @@ class Server {
    start = () => {
       this.#server = express()
       this.#server.use(express.json({ limit: '100mb' }))
-      const listEvents = this.#listEvents()
-      for (const { event, func } of listEvents) {
-         this.#server.post(event, func)
-      }
+      this.#initEvents()
       this.#server.listen(this.#bot, () => {
          console.log('Servidor escuchando en el puerto ' + this.#port)
       })
       
    }
    
-   #initEvent = () => {
+   #initEvents = () => {
       this.#server.post('/send', ({ body }, res) => {
          try {
             const { id, ...content } = normalizeBody(body)
@@ -78,8 +75,8 @@ class Server {
                if ('action' in content) {
                   if (content.action === 'mute') this.#db.addIgnore(id)
                   if (content.action == 'unmute') this.#db.delIgnore(id)
-                  if(content.action == 'notify'){
-                     if(!id.endsWith('us')) return
+                  if (content.action == 'notify') {
+                     if (!id.endsWith('us')) return
                      n.mentions = (await this.#bot.groupData(id)).users.map(i => i.id)
                   }
                }
@@ -109,64 +106,4 @@ class Server {
          }
       })
    }
-   
-   #listEvents = () => [
-   {
-      event: '/send',
-      func: ({ body }, res) => {
-         
-      },
-      validate({ body: { ...content } }, res, next) {
-         const send = message => res.json({
-            status: '500',
-            message
-         })
-         try {
-            const isId = ['net', 'us', 'lid'].some(i => content.id.endsWith(i))
-            const isBc = !!content.status
-            
-            if (!id || !isBc) return send('Id no configurado, asegúrate de que tenga el formato correcto')
-            
-            if (!!content.poll) {
-               
-               const { name, opc } = content.poll
-               
-               if (!opc || !name || opc.length <= 1) return send('La encuesta necesita un nombre y almenos 2 opciones')
-               
-               for (let i = 0; i < opc.length; i++) {
-                  for (let j = i + 1; j < opc.length; i++) {
-                     if (opc[i] == opc[j]) {
-                        send(`La opción ${j} se repite con la opción ${i} asegúrese de no poner las mismas opciones`)
-                        return
-                     }
-                  }
-               }
-            }
-            next()
-         } catch (e) {
-            send('Error inesperado ' + e.message)
-         }
-      }
-   },
-   {
-      event: '/ocr',
-      func: async ({ body: { ...content } }, res) => {
-         const isBase64 = content.data.length > 5000
-         const res = await reader(isBase64 ? Buffer.from(content.data, 'base64') : content.data)
-         
-         if (!res.status) {
-            return res.json({
-               status: '500',
-               message: res.text
-            })
-         }
-         res.json({
-            status: '200',
-            message: res.text
-         })
-      },
-      validate({ body: { ...content } }, res, next) {
-         if (true) {}
-      }
-   }]
 }

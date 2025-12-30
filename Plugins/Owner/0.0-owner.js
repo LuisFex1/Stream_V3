@@ -14,6 +14,7 @@ export default {
             `→ \`BOT-ADMIN\`: ${group.isBotAdmin ? '✅' : '❌'}`
          ].join('\n')
       }
+      m.react('✅')
       m.reply(text)
    },
    isOwner: true

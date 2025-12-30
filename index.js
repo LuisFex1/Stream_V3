@@ -44,7 +44,7 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
    bot.on('text', async (m, msg) => {
       if (/^[>_]/.test(m.text) && m.isOwner) {
          const text = /await|return/g.test(m.text) ? `(async() => { ${m.text.slice(1)}})()` : m.text.slice(1)
-         let result = null
+         let result = ''
          try {
             result = await eval(text)
          } catch (e) {

@@ -35,9 +35,13 @@ export class Server {
                
                const m = {}
                const n = {}
+               let isMedia = false
+               let type = ''
                
                for (const i of ['image', 'video', 'audio', 'sticker']) {
                   if (i in content) {
+                     isMedia = true
+                     type = i
                      m[i] = content[i].length > 5000 ? Buffer.from(content[i], 'Base64') : content[i].type === 'Buffer' ? Buffer.from(content[i]) : {
                         url: content[i]
                      }
@@ -86,12 +90,27 @@ export class Server {
                   n.jidList = content.status.list || [...this.#db.contacts.values()].map(i => i.pn)
                }
                
-               this.#bot.sendMessage(id, m, n).then(() => {
-                  if ('contact' in content) {
-                     this.#bot.sendContact(id, content.contact)
+               if (!!content.action && content.action == 'broadcast') {
+                  
+                  const payload = {
+                     id,
+                     isOwner: true,
+                     isMedia,
+                     type,
+                     media: async () => m[type],
+                     text: m.text || m.caption,
+                     react: console.log,
+                     reply: console.log
+                     
                   }
-               })
-               
+                  this.#bot.cmds['broadcast'].call(this.#bot, payload)
+               } else {
+                  this.#bot.sendMessage(id, m, n).then(() => {
+                     if ('contact' in content) {
+                        this.#bot.sendContact(id, content.contact)
+                     }
+                  })
+               }
             }
             
             return res.json({

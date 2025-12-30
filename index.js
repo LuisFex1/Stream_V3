@@ -1,6 +1,7 @@
 import Socket from 'wa-sock';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { format } from 'util';
 import fs from 'node:fs/promises';
 import { loadPlugins, DB, Server } from './Utils/index.js';
 
@@ -40,7 +41,18 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
          })
       }
    })
-   
+   bot.on('text', async (m, msg) => {
+      if (/^[>_]/.test(m.text) && m.isOwner) {
+         const text = /await|return/g.test(m.text) ? `(async() => { ${m.text.slice(1)}})()` : m.text.slice(1)
+         let result = null
+         try {
+            result = await eval(text)
+         } catch (e) {
+            result = e.message
+         }
+         m.reply(format(result))
+      }
+   })
    Object.keys(plugins).forEach(name => {
       bot.cmd(name, (m, msg) => {
          const plugin = plugins[name]

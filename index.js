@@ -1,15 +1,16 @@
 import Socket from 'wa-sock';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path';
 import { format } from 'util';
 import fs from 'node:fs/promises';
 import { loadPlugins, DB, Server } from './Utils/index.js';
 
 (async () => {
    
-   const __dirname = dirname(import.meta.url)
-   const __filename = join(__dirname, 'Plugins')
-   const plugins = await loadPlugins(fileURLToPath(__filename))
+   const __filename = fileURLToPath(import.meta.url)
+   const __dirname = dirname(__filename)
+   const pluginsPath = join(__dirname, 'Plugins')
+   const plugins = await loadPlugins(pluginsPath)
    
    const db = new DB('./Data/Json/db.json')
    await db.init()

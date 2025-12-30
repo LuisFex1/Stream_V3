@@ -7,7 +7,7 @@ export default {
       let text = ''
       for (const group of groups) {
          text += [
-            '> ```-----------------```',
+            '\n> ```-----------------```',
             `→ \`NAME\`: *${group.name}*`,
             `→ \`ID\`: *${group.id}*`,
             `→ \`OPEN\`: ${group.open ? '✅' : '❌'}`,

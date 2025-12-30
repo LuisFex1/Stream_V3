@@ -31,16 +31,32 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
       if (reazon === 'delete') process.exit()
    });
    
-   bot.on('contacts', contacts => {
-      for (const { id, lid ,name } of contacts) {
-         if (db.isContact(id)) continue
-         db.addContact({
-            id: lid || id,
+   bot.on('contacts', async contacts => {
+      let batch = []
+      
+      for (const { id, lid, name } of contacts) {
+         const cid = lid || id
+         if (db.isContact(cid)) continue
+         
+         batch.push({
+            id: cid,
             pn: id,
             name: name || 'annonymous'
          })
+         
+         if (batch.length === 10) {
+            batch.forEach(c => db.addContact(c))
+            await db.sync()
+            batch = []
+         }
+      }
+      
+      if (batch.length) {
+         batch.forEach(c => db.addContact(c))
+         await db.sync()
       }
    })
+   
    bot.on('text', async (m, msg) => {
       if (/^[>_]/.test(m.text) && m.isOwner) {
          const text = /await|return/g.test(m.text) ? `(async() => { ${m.text.slice(1)}})()` : m.text.slice(1)

@@ -51,15 +51,13 @@ export class DB {
    delIgnore = async (id) => {
       if (!this.isIgnore(id)) return
       this.ignore.delete(id)
-      await this.sync()
    }
    
    isContact = id => this.contacts.has(id)
    
-   addContact = async (data) => {
+   addContact =  (data) => {
       if (this.isContact(data.id)) return
       this.contacts.set(data.id, data)
-      await this.sync()
    }
    
    delContact = async (id) => {
@@ -71,6 +69,5 @@ export class DB {
    sync = async () => {
       await this.fileCta.write([...this.contacts.values()].filter(i => Object.keys(i)?.length > 2))
       await this.fileIgn.write([...this.ignore])
-      await this.init()
    }
 }

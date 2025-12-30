@@ -12,7 +12,7 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
    const pluginsPath = join(__dirname, 'Plugins')
    const plugins = await loadPlugins(pluginsPath)
    
-   const db = new DB('./Data/Json/db.json')
+   const db = new DB('./Data/Json/contacts.json', './Data/Json/ignore.json')
    await db.init()
    
    const bot = new Socket({

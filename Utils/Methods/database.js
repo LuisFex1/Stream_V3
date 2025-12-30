@@ -1,13 +1,10 @@
 import fs from 'node:fs/promises'
 import { exists } from './funcs.js'
 
-class FileDatabase {
+class FileDataBase {
    constructor(path = './db.json') {
       this.path = path
-      this.defaultData = {
-         contacts: [],
-         ignore: []
-      }
+      this.defaultData = []
    }
    
    init = async () => {
@@ -27,17 +24,20 @@ class FileDatabase {
 }
 
 export class DB {
-   constructor(path = './db.json') {
-      this.file = new FileDatabase(path)
+   constructor(path1 = './contacts.json', path2 = './ignore.json') {
+      this.fileCta = new FileDatabase(path1)
+      this.fileIgn = new FileDatabase(path2)
       this.contacts = new Map()
       this.ignore = new Set()
    }
    
    init = async () => {
-      await this.file.init()
-      const db = await this.file.load()
-      this.contacts = new Map(db.contacts.map(i => [i.id, i]))
-      this.ignore = new Set(db.ignore)
+      await this.fileCta.init()
+      await this.fileIgn.init()
+      const dbCta = await this.fileCta.load()
+      const dbIgn = await this.fileIgn.load()
+      this.contacts = new Map(dbCta.map(i => [i.id, i]))
+      this.ignore = new Set(dbIgn)
    }
    
    isIgnore = id => this.ignore.has(id)
@@ -69,10 +69,8 @@ export class DB {
    }
    
    sync = async () => {
-      const data = {
-         contacts: [...this.contacts.values()].filter(i => Object.keys(i)?.length > 2),
-         ignore: [...this.ignore]
-      }
-      await this.file.write(data)
+      await this.fileCta.write([...this.contacts.values()].filter(i => Object.keys(i)?.length > 2))
+      await this.fileIgn.write([...this.ignore])
+      await this.init()
    }
 }

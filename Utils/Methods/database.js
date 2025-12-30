@@ -15,7 +15,7 @@ class FileDataBase {
    load = async () => {
      if(!(await exists(this.path))) return this.defaultData
       const db = await fs.readFile(this.path)
-      return JSON.parse(db)
+      if(db) return JSON.parse(db)
    }
    
    write = async (data) => {

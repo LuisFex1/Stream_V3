@@ -1,3 +1,5 @@
+const isUrl = input => /^https?:\/\//.test(input)
+
 export function normalizeBody(body = {}) {
    let m = {
       id: body.number || body.id || body.phone
@@ -7,7 +9,7 @@ export function normalizeBody(body = {}) {
          case 'image':
          case 'video':
          case 'audio':
-            m[body.type] = !Buffer.isBuffer(body.path) && typeof body.path !== 'string' ? Buffer.from(body.path, 'base64') : body.path
+            m[body.type] = isUrl(body.path) ? { url: body.path } : !Buffer.isBuffer(body.path) && typeof body.path !== 'string' ? Buffer.from(body.path, 'base64') : body.path
             m.caption = body.message
             break;
          case 'text':
@@ -27,9 +29,9 @@ export function normalizeBody(body = {}) {
       }
    }
    
-   for (const i of ['viewOnce', 'voiceNote', 'broadcast', 'action']) {
-      if (i === 'broadcast') {
-         m.status = { list: body.users }
+   for (const i of ['viewOnce', 'voiceNote', 'status', 'action']) {
+      if (i === 'status') {
+         m[i] = { list: body.users }
          continue
       }
       if (i in body) m[i] = body[i]

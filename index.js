@@ -32,7 +32,7 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
    });
    
    bot.on('contacts', contacts => {
-      for (const { id, name } of contacts) {
+      for (const { id, lid ,name } of contacts) {
          if (db.isContact(id)) continue
          db.addContact({
             id: lid || id,

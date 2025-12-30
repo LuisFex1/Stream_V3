@@ -70,7 +70,7 @@ export class DB {
    
    sync = async () => {
       const data = {
-         contacts: [...this.contacts.values()].filter(i => i?.length > 2),
+         contacts: [...this.contacts.values()].filter(i => Object.keys(i)?.length > 2),
          ignore: [...this.ignore]
       }
       await this.file.write(data)

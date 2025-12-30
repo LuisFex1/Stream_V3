@@ -25,8 +25,8 @@ class FileDataBase {
 
 export class DB {
    constructor(path1 = './contacts.json', path2 = './ignore.json') {
-      this.fileCta = new FileDatabase(path1)
-      this.fileIgn = new FileDatabase(path2)
+      this.fileCta = new FileDataBase(path1)
+      this.fileIgn = new FileDataBase(path2)
       this.contacts = new Map()
       this.ignore = new Set()
    }

@@ -17,7 +17,7 @@ export default {
       
       if ((isMute && m.cmd == 'mute') || (!isMute && m.cmd == 'unmute')) return m.reply(mess['ya' + m.cmd])
       
-      if (m.cmd === 'mute')  await db.addInore(mention)
+      if (m.cmd === 'mute')  await db.addIgnore(mention)
       
       if (m.cmd === 'unmute') await db.delIgnore(mention)
       

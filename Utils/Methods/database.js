@@ -16,6 +16,7 @@ class FileDatabase {
    }
    
    load = async () => {
+     if(!(await exists(this.path))) return this.defaultData
       const db = await fs.readFile(this.path)
       return JSON.parse(db)
    }
@@ -69,7 +70,7 @@ export class DB {
    
    sync = async () => {
       const data = {
-         contacts: [...this.contacts.values()],
+         contacts: [...this.contacts.values()].filter(i => i.length == 3),
          ignore: [...this.ignore]
       }
       await this.file.write(data)

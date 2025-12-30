@@ -11,7 +11,7 @@ export default {
       
       > *𝌆 「 INFORMACIÓN DEL BOT 」*
       
-         • *Nombre*: ${this.bot.user.name}
+         • *Nombre*: ${this.user.name}
          • *Version*: 3.0.0
          • *Prefijo*: ${prefix}
          

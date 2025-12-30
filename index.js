@@ -37,7 +37,7 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
          db.addContact({
             id: lid || id,
             pn: id,
-            name
+            name: name || 'annonymous'
          })
       }
    })

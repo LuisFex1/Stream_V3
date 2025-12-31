@@ -51,6 +51,7 @@ export class DB {
    delIgnore = async (id) => {
       if (!this.isIgnore(id)) return
       this.ignore.delete(id)
+      await this.sync()
    }
    
    isContact = id => this.contacts.has(id)

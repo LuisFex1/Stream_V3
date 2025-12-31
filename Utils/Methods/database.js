@@ -13,9 +13,9 @@ class FileDataBase {
    }
    
    load = async () => {
-     if(!(await exists(this.path))) return this.defaultData
+      if (!(await exists(this.path))) return this.defaultData
       const db = await fs.readFile(this.path)
-      if(db) return JSON.parse(db)
+      if (db) return JSON.parse(db)
    }
    
    write = async (data) => {
@@ -29,6 +29,8 @@ export class DB {
       this.fileIgn = new FileDataBase(path2)
       this.contacts = new Map()
       this.ignore = new Set()
+      this.modCta = false
+      this.modIgn = false
    }
    
    init = async () => {
@@ -45,30 +47,46 @@ export class DB {
    addIgnore = async (id) => {
       if (this.isIgnore(id)) return
       this.ignore.add(id)
+      this.modIgn = true
       await this.sync()
    }
    
    delIgnore = async (id) => {
       if (!this.isIgnore(id)) return
       this.ignore.delete(id)
+      this.modIgn = true
       await this.sync()
    }
    
    isContact = id => this.contacts.has(id)
    
-   addContact =  (data) => {
+   addContact = (data) => {
       if (this.isContact(data.id)) return
+      this.modCta = true
       this.contacts.set(data.id, data)
    }
    
    delContact = async (id) => {
       if (!this.isContact(id)) return
       this.contacts.delete(id)
+      this.modCta = true
       await this.sync()
    }
    
-   sync = async () => {
+   syncCta = async () => {
+      if (!this.modCta) return
       await this.fileCta.write([...this.contacts.values()].filter(i => Object.keys(i)?.length > 2))
+      this.modCta = false
+   }
+   
+   syncIgn = async () => {
+      if (!this.modIgn) return
       await this.fileIgn.write([...this.ignore])
+      this.modIgn = false
+   }
+   
+   sync = async () => {
+      await this.syncCta()
+      await this.syncIgn()
    }
 }

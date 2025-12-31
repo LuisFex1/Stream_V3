@@ -2,7 +2,7 @@ export default {
    cmd: 'mute|unmute',
    async func(m, { db }) {
       
-      const mention = m.mentions || m.quote?.id || (!m.isGroup ? m.id : null)
+      const mention = m.mentions || m.quote?.id || (!m.isGroup ? m.id : m.from)
       
       if (!mention) return m.reply('Es necesario mencionar al usuario para realizar esta acción')
       

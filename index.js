@@ -32,29 +32,18 @@ import { loadPlugins, DB, Server } from './Utils/index.js';
    });
    
    bot.on('contacts', async contacts => {
-      let batch = []
-      
       for (const { id, lid, name } of contacts) {
          const cid = lid || id
          if (db.isContact(cid)) continue
          
-         batch.push({
+         db.addContact({
             id: cid,
             pn: id,
             name: name || 'annonymous'
          })
-         
-         if (batch.length === 10) {
-            batch.forEach(c => db.addContact(c))
-            await db.sync()
-            batch = []
-         }
       }
       
-      if (batch.length) {
-         batch.forEach(c => db.addContact(c))
-         await db.sync()
-      }
+      await db.sync()
    })
    
    bot.on('text', async (m, msg) => {
